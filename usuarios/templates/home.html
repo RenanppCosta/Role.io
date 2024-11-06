@@ -7,22 +7,23 @@
 		<!-- Formulário de Criação -->
 		<div class="bg-white p-6 rounded-lg shadow-md min-w-[40%] xl:min-w-[60%] max-h-[85%]">
 			<h2 class="text-xl font-semibold mb-4">Criar Novo Rolê</h2>
-			<form class="space-y-4">
+			<form class="space-y-4" method="POST" action="{% url 'home' %}" enctype="multipart/form-data">
+				{% csrf_token %}
 				<div>
 					<label class="text-sm font-medium text-gray-700">Título do Rolê</label>
-					<input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Ex: Churrasco de Domingo">
+					<input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Ex: Churrasco de Domingo" name="title-role">
 				</div>
 				<div>
 					<label class="text-sm font-medium text-gray-700">Descrição</label>
-					<textarea class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" rows="3" placeholder="Detalhes sobre o evento..."></textarea>
+					<textarea class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" rows="3" placeholder="Detalhes sobre o evento..." name="description"></textarea>
 				</div>
 				<div>
 					<label class=" text-sm font-medium text-gray-700">Data e Hora</label>
-					<input type="datetime-local" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border">
+					<input type="datetime-local" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" name="date-role">
 				</div>
 				<div>
 					<label class=" text-sm font-medium text-gray-700">Local</label>
-					<input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Endereço do evento">
+					<input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Endereço do evento" name="location">
 				</div>
 				<button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-800 transition font-medium">
 					Criar Rolê
@@ -34,7 +35,6 @@
 		<div class="bg-white p-6 rounded-lg shadow-md xl:min-w-[60%]">
 			<h2 class="text-xl font-semibold mb-4">Meus Rolês</h2>
 			<div class="space-y-4">
-				<!-- Evento 1 -->
 				<div class="border rounded-lg p-4 hover:shadow-md transition">
 					<div class="flex justify-between items-start">
 						<h3 class="font-semibold text-lg">Churrasco de Domingo</h3>
@@ -94,9 +94,6 @@
 
 				
 
-				
-
-				<!-- Evento 2 -->
 				<div class="border rounded-lg p-4 hover:shadow-md transition">
 					<div class="flex justify-between items-start">
 						<h3 class="font-semibold text-lg">Aniversário da Maria</h3>
