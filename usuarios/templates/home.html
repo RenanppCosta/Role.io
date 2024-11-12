@@ -36,10 +36,11 @@
 			<h2 class="text-xl font-semibold mb-4">Meus Rolês</h2>
 			<div class="space-y-4">
 				{% for event in events %}
-				<div class="border rounded-lg p-4 hover:shadow-md transition">
+				
+				<div class="{% if event.status == "Cancelado" %} opacity-50 {% endif %} card-event border rounded-lg p-4 hover:shadow-md transition">
 					<div class="flex justify-between items-start">
 						<h3 class="font-semibold text-lg">{{event.title}}</h3>
-						<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">{{event.status}}</span>
+						<span class="{% if event.status == "Cancelado" %} bg-red-100 text-red-800 {% endif %} bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">{{event.status}}</span>
 					</div>
 					<p class="text-gray-600 mt-2 md:text-base text-sm">{{event.description}}</p>
 					<div class="mt-2 text-sm text-gray-500 space-y-1">
@@ -57,14 +58,13 @@
 							{{event.location}}
 						</p>
 					</div>
-					<div class="mt-3 flex space-x-2">
+					<div class="{% if event.status == "Cancelado" %} hidden{% endif %} container-btn mt-3 flex space-x-2">
 						<button class="text-purple-600 hover:text-purple-800 font-medium">Ver detalhes</button>
 						<span class="text-gray-300">|</span>
-						<button class="text-red-600 hover:text-red-800 font-medium">Cancelar</button>
+						<button class="cancel-btn text-red-600 hover:text-red-800 font-medium" data-event-id="{{event.id}}">Cancelar</button>
 					</div>
 				</div> 
-				{% endfor %}
-				
+				{% endfor %}				
 
 				{% if events|length == 0 %}
 				<div class="flex items-center flex-col space-y-3">
@@ -77,6 +77,63 @@
 				
 			</div>
 		</div>
+
+		
+		<div id="modal-cancel" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+			<div class="bg-white p-6 rounded-lg flex flex-col items-center space-y-4">
+				<h2 class="text-lg md:text-2xl font-semibold mb-4">Tem certeza que deseja cancelar o Rolê?</h2>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-16" style="margin-top: 0;">
+					<path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+				</svg>
+				<div class="flex justify-center space-x-4">
+					<button id="cancel-modal-btn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Não</button>
+					<button id="confirm-cancel-btn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Sim, cancelar</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </main>
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+	let currentEventId = null;
+	$(".cancel-btn").on("click", function() {
+        currentEventId = $(this).data("event-id");
+        $("#modal-cancel").removeClass("hidden");
+    });
+
+	$("#cancel-modal-btn").on("click", function() {
+        $("#modal-cancel").addClass("hidden");
+    });
+
+	$("#confirm-cancel-btn").on("click", function() {
+		$("#modal-cancel").addClass("hidden");
+
+		if(currentEventId){
+			$.ajax({
+                url: `/cancel-event/${currentEventId}/`,
+                type: "POST",
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                success: function(response) {
+                    if (response.status === "success") {
+                        const eventCard = $(`[data-event-id="${currentEventId}"]`).closest(".card-event");
+                        eventCard.find(".text-xs").addClass("bg-red-100 text-red-800");
+                        eventCard.addClass("opacity-50");
+                        eventCard.find(".container-btn").remove();
+                    } else {
+                        console.error("Erro ao cancelar o evento.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erro ao enviar a requisição:", error);
+                }
+            });
+		}
+	});
+
+</script>
+
 {% endblock %}

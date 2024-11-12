@@ -1,5 +1,6 @@
 from datetime import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from .models import Events
 
 # Create your views here.
@@ -34,3 +35,11 @@ def home(request):
         event.save()
 
         return redirect("home")
+    
+def cancel_event(request, event_id):
+    if request.method == "POST":
+        event = get_object_or_404(Events, id=event_id)
+        event.status = "Cancelado" 
+        event.save()
+        return JsonResponse({"status": "success", "message": "Evento cancelado com sucesso"})
+    
