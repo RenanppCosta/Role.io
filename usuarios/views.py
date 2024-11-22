@@ -42,4 +42,9 @@ def cancel_event(request, event_id):
         event.status = "Cancelado" 
         event.save()
         return JsonResponse({"status": "success", "message": "Evento cancelado com sucesso"})
-    
+
+
+def view_event_by_id(request, event_id):
+    if request.method == "GET":
+        event = get_object_or_404(Events, id=event_id)
+        return render(request, "event.html", {"event": event})
