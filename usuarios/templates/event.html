@@ -26,25 +26,44 @@
             </div>
         </div>
     
-        <div class="bg-white p-6 rounded-lg shadow-md lg:w-1/2 min-w-[40%] flex flex-col justify-between space-y-4">
-            <h2 class="text-xl font-semibold mb-4">Lista de Convidados</h2>
-            <div class="flex items-center flex-col space-y-3">
-                <p class="text-xl md:text-2xl text-center">Ainda não possui nenhum convidado</p>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-14">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>				  
+        <div class="bg-white p-6 rounded-lg shadow-md lg:w-1/2 min-w-[50%] flex flex-col justify-between space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Lista de Convidados</h2>
+                <span class="text-sm text-gray-500">(1/10 confirmados)</span>
             </div>
-
+        
+            <div class="space-y-3">
+                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md hover:bg-gray-100 transition">
+                    <div class="flex items-center space-x-3 w-full">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-sm sm:text-base font-medium text-gray-800">Juliana Moraes</p>
+                            <p class="text-xs sm:text-sm text-gray-500">21 99999-3232</p>
+                        </div>
+                        <div class="flex item-center justify-center">
+                            <span class="text-xs text-center sm:text-sm text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">
+                                Aguardando Confirmação
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
             <div class="w-full flex gap-2">
-                <div type="submit" class="w-full text-center text-xs sm:text-base md:text-xs lg:text-base items-center justify-center flex bg-transparent text-green-600 border border-green-600 py-3 px-4 rounded-md font-medium">
+                <div class="w-full text-center text-xs sm:text-base md:text-xs lg:text-base items-center justify-center flex bg-transparent text-green-600 border border-green-600 py-3 px-4 rounded-md font-medium">
                     Adicionar Convidado
                 </div>
-                <button class="bg-green-600 text-white p-4 rounded-md hover:bg-green-800 transition">
-                    +
+                <button class="bg-green-600 text-white p-4 rounded-md hover:bg-green-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
                 </button>
             </div>
         </div>
-
         
         
     </div>
