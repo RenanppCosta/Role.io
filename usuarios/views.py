@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Events
+from .models import Events, Guests
 
 # Create your views here.
 
@@ -45,6 +45,24 @@ def cancel_event(request, event_id):
 
 
 def view_event_by_id(request, event_id):
+    event = get_object_or_404(Events, id=event_id)
+
     if request.method == "GET":
-        event = get_object_or_404(Events, id=event_id)
-        return render(request, "event.html", {"event": event})
+        guests = Guests.objects.filter(event=event)
+        return render(request, "event.html", {"event": event, "guests": guests})
+    elif request.method == "POST":
+        name = request.POST.get("guest-name")
+        whatsapp = request.POST.get("guest-wpp")
+        max_companion = request.POST.get("guest-companion")
+
+        guest = Guests(
+            event= event,
+            name=name,
+            whatsapp=whatsapp,
+            max_companion= max_companion
+        )
+
+        guest.save()
+
+        return redirect("view_event", event_id=event.id)
+        
