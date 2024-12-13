@@ -2,12 +2,17 @@ from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Events, Guests
+from django.core.paginator import Paginator
 
 # Create your views here.
 
 def home(request):
     if request.method == "GET":
-        events = Events.objects.all()
+        events_list = Events.objects.all().order_by("-date")
+
+        paginator = Paginator(events_list, 3)
+        page = request.GET.get("page")
+        events = paginator.get_page(page)
 
         return render(request, "home.html", {"events": events})
     
