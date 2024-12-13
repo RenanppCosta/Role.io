@@ -3,9 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Events, Guests
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required
 def home(request):
     if request.method == "GET":
         events_list = Events.objects.all().order_by("-date")
@@ -40,7 +42,8 @@ def home(request):
         event.save()
 
         return redirect("home")
-    
+
+@login_required 
 def cancel_event(request, event_id):
     if request.method == "POST":
         event = get_object_or_404(Events, id=event_id)
@@ -49,6 +52,7 @@ def cancel_event(request, event_id):
         return JsonResponse({"status": "success", "message": "Evento cancelado com sucesso"})
 
 
+@login_required
 def view_event_by_id(request, event_id):
     event = get_object_or_404(Events, id=event_id)
 
