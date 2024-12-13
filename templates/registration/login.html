@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+        <h2 class="text-xl font-semibold mb-4 text-center">Entrar</h2>
+            
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-800 transition font-medium">
+                Login
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
