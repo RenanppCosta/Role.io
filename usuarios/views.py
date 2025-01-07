@@ -4,34 +4,40 @@ from django.http import JsonResponse
 from .models import Events, Guests
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
 @login_required
 def home(request):
+    events_list = Events.objects.all().order_by("-date")
+
+    paginator = Paginator(events_list, 3)
+    page = request.GET.get("page")
+    events = paginator.get_page(page)
+
     if request.method == "GET":
-        events_list = Events.objects.all().order_by("-date")
-
-        paginator = Paginator(events_list, 3)
-        page = request.GET.get("page")
-        events = paginator.get_page(page)
-
         return render(request, "home.html", {"events": events})
-    
+
     elif request.method == "POST":
         title = request.POST.get("title-role")
         description = request.POST.get("description")
         date = request.POST.get("date-role")
         location = request.POST.get("location")
-        
-        if date:
+
+        if not title or not description or not date or not location:
+            messages.error(request, "Todos os campos devem ser preenchidos!")
+            return render(request, "home.html", {"events": events})
+
+        try:
             event_date = datetime.fromisoformat(date)
             if event_date < datetime.now():
-                return render(request, "home.html")
-        else:
-            return render(request, "home.html")
-        
-            
+                messages.error(request, "A data não pode ser no passado!")
+                return render(request, "home.html", {"events": events})
+        except ValueError:
+            messages.error(request, "Data inválida!")
+            return render(request, "home.html", {"events": events})
+
         event = Events(
             title=title,
             description=description,
@@ -40,8 +46,9 @@ def home(request):
         )
         
         event.save()
-
         return redirect("home")
+
+       
 
 @login_required 
 def cancel_event(request, event_id):

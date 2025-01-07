@@ -5,7 +5,7 @@
 {% include "partials/navbar.html"%}
 <main class="container mx-auto mt-8 px-4">
 	<div class="flex flex-col md:flex-row justify-center gap-8 px-6">
-		<div class="bg-white p-6 rounded-lg shadow-md min-w-[45%] max-h-[600px]">
+		<div class="bg-white p-6 rounded-lg shadow-md min-w-[45%] sm:max-h-[620px] lg:max-h-[600px]">
 			<h2 class="text-xl font-semibold mb-4">Criar Novo Rolê</h2>
 			<form class="space-y-4" method="POST" action="{% url 'home' %}" enctype="multipart/form-data">
 				{% csrf_token %}
@@ -29,6 +29,12 @@
 					Criar Rolê
 				</button>
 			</form>
+			{% if messages %}
+    			{% for message in messages %}
+        			<div class="alert alert-{{ message.tags }} bg-red-300 text-red-600 p-3 text-center rounded-md mt-4">{{ message }}</div>
+    			{% endfor %}
+			{% endif %}
+
 		</div>
 
 		<!-- Lista de Eventos -->
