@@ -74,6 +74,11 @@
                     </svg>
                 </button>
             </div>
+            {% if messages %}
+    			{% for message in messages %}
+        		    <div class="alert alert-{{ message.tags }} bg-red-300 text-red-600 p-3 text-center rounded-md mt-4">{{ message }}</div>
+    			{% endfor %}
+			{% endif %}
         </div>
         
         <div id="modal-add-guest" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
@@ -116,32 +121,7 @@
 	$("#cancel-btn").on("click", function() {
         $("#modal-add-guest").addClass("hidden");
     });
-
-	{% comment %} $("#confirm-cancel-btn").on("click", function() {
-		$("#modal-cancel").addClass("hidden");
-
-		if(currentEventId){
-			$.ajax({
-                url: `/cancel-event/${currentEventId}/`,
-                type: "POST",
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                success: function(response) {
-                    if (response.status === "success") {
-                        const eventCard = $(`[data-event-id="${currentEventId}"]`).closest(".card-event");
-                        eventCard.find(".text-xs").addClass("bg-red-100 text-red-800");
-                        eventCard.addClass("opacity-50");
-                        eventCard.find(".container-btn").remove();
-                    } else {
-                        console.error("Erro ao cancelar o evento.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erro ao enviar a requisição:", error);
-                }
-            });
-		}
-	}); {% endcomment %}
-
+    
 </script>
 
 {% endblock %}

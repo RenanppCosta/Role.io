@@ -5,12 +5,15 @@ from .models import Events, Guests
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.timezone import now
 
 # Create your views here.
 
 @login_required
 def home(request):
     events_list = Events.objects.all().order_by("-date")
+
+    Events.objects.filter(date__lt=now()).delete()
 
     paginator = Paginator(events_list, 3)
     page = request.GET.get("page")
@@ -62,15 +65,21 @@ def cancel_event(request, event_id):
 @login_required
 def view_event_by_id(request, event_id):
     event = get_object_or_404(Events, id=event_id)
-
+    guests = Guests.objects.filter(event=event)
     if request.method == "GET":
-        guests = Guests.objects.filter(event=event)
         return render(request, "event.html", {"event": event, "guests": guests})
     elif request.method == "POST":
         name = request.POST.get("guest-name")
         whatsapp = request.POST.get("guest-wpp")
         max_companion = request.POST.get("guest-companion")
 
+        if not name or not whatsapp:
+            messages.error(request, "Todos os campos devem ser preenchidos!")
+            return render(request, "event.html", {"event": event, "guests": guests})
+        
+        if not max_companion:
+            max_companion = 0
+        
         guest = Guests(
             event= event,
             name=name,
