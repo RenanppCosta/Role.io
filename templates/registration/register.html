@@ -4,17 +4,18 @@
 {% block content %}
 <div class="flex justify-center items-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
-        <h2 class="text-xl font-semibold mb-4 text-center">Entrar</h2>
+        <h2 class="text-xl font-semibold mb-4 text-center">Criar Conta</h2>
             
         <form method="POST">
             {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
             {{ form|crispy }}
             <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-800 transition font-medium">
-                Login
+                Registrar
             </button>
         </form>
         <div class="text-center pt-3">
-            <div class="small"><a href="/accounts/register" class="text-sm">Não possui uma conta? Faça o cadastro agora!</a></div>
+            <div class="small"><a href="/login" class="text-sm">Já possui uma conta? Faça o login!</a></div>
         </div>
     </div>
 </div>
