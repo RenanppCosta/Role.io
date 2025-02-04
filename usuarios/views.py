@@ -6,12 +6,13 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.timezone import now
+from django.http import Http404
 
 # Create your views here.
 
 @login_required
 def home(request):
-    events_list = Events.objects.all().order_by("-date")
+    events_list = Events.objects.all().order_by("-date").filter(user=request.user)
 
     Events.objects.filter(date__lt=now()).delete()
 
@@ -45,7 +46,8 @@ def home(request):
             title=title,
             description=description,
             date=event_date,
-            location=location
+            location=location,
+            user=request.user
         )
         
         event.save()
@@ -66,6 +68,11 @@ def cancel_event(request, event_id):
 def view_event_by_id(request, event_id):
     event = get_object_or_404(Events, id=event_id)
     guests = Guests.objects.filter(event=event)
+
+    if event.user != request.user:
+        messages.error(request, "Você não tem permissão para acessar este evento.")
+        return redirect("home")
+
     if request.method == "GET":
         return render(request, "event.html", {"event": event, "guests": guests})
     elif request.method == "POST":
